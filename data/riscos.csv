@@ -1,0 +1,11 @@
+risco_id,ativo,ameaca,vulnerabilidade,prob_inerente,impacto_inerente,nivel_inerente,faixa_inerente,tratamento,controles_anexo_a,prob_residual,impacto_residual,nivel_residual,responsavel
+R01,Base de clientes,Atacante externo,SQL Injection na aplicação,4,5,20,Crítico,Mitigar,"A.8.26, A.8.28, A.8.8",2,4,8,Equipe TI/Dev
+R02,Contas admin,Credential stuffing,Ausência de MFA,4,4,16,Crítico,Mitigar,"A.8.5, A.8.2",1,4,4,Equipe TI
+R03,E-commerce,DDoS / falha,Sem redundância,3,5,15,Crítico,Mitigar/Transferir,"A.8.14, A.5.30, A.8.6",2,5,10,Equipe TI
+R04,Backups/dados,Ransomware,Backup sem teste; sem EDR,3,5,15,Crítico,Mitigar,"A.8.13, A.8.7, A.6.3",2,3,6,Equipe TI
+R05,SGSI,Incidente sem resposta,Sem plano de resposta,4,3,12,Alto,Mitigar,"A.5.24, A.5.26, A.5.27",2,3,6,Resp. SGSI
+R06,Dados pessoais,Fiscalização ANPD,Adequação LGPD incompleta,3,4,12,Alto,Mitigar,"A.5.34, A.5.31, A.5.33",2,3,6,DPO
+R07,Servidores,Exploração de CVE,Patches em atraso,4,3,12,Alto,Mitigar,"A.8.8, A.8.9",2,3,6,Equipe TI
+R08,Nuvem,Configuração incorreta,Bucket/porta exposta,2,5,10,Alto,Mitigar,"A.5.23, A.8.9",1,4,4,Equipe TI
+R09,Colaboradores,Phishing,Falta de awareness,5,2,10,Alto,Mitigar,"A.6.3, A.8.23",2,3,6,Resp. SGSI
+R10,Sistemas,Ex-colaborador,Acesso não revogado,3,3,9,Médio,Mitigar,"A.6.5, A.5.18",2,2,4,Equipe TI/RH

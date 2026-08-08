@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SGSI Aurora — Painel de Postura de Segurança</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#F5F7FA; --panel:#FFFFFF; --ink:#16202B; --muted:#5C6B7A; --line:#E2E8EF;
+    --steel:#1F5C8B; --steel-d:#153f61;
+    --baixo:#2E7D5B; --medio:#C9A227; --alto:#D97706; --critico:#B4283C;
+    --grid1:#E9F0EC; --grid2:#FBF4DE; --grid3:#FBE9D6; --grid4:#F7DBDF;
+    --shadow:0 1px 2px rgba(16,32,43,.04),0 8px 24px rgba(16,32,43,.06);
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{margin:0;background:var(--paper);color:var(--ink);
+    font-family:Inter,system-ui,sans-serif;line-height:1.5;
+    background-image:radial-gradient(circle at 1px 1px,rgba(31,92,139,.05) 1px,transparent 0);background-size:22px 22px}
+  .wrap{max-width:1080px;margin:0 auto;padding:28px 20px 64px}
+  .mono{font-family:"IBM Plex Mono",monospace;font-variant-numeric:tabular-nums}
+  /* header */
+  header.top{border-bottom:2px solid var(--ink);padding-bottom:18px;margin-bottom:6px}
+  .eyebrow{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.18em;
+    text-transform:uppercase;color:var(--steel);font-weight:600}
+  h1{font-family:Archivo,sans-serif;font-weight:800;font-size:clamp(26px,5.2vw,40px);
+    letter-spacing:-.02em;margin:6px 0 4px}
+  .sub{color:var(--muted);font-size:14px;max-width:60ch}
+  .statusline{margin-top:14px;display:flex;flex-wrap:wrap;gap:8px 18px;
+    font-family:"IBM Plex Mono",monospace;font-size:12px;color:var(--muted)}
+  .dot{display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:6px;vertical-align:1px}
+  /* metric cards */
+  .metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:22px 0 30px}
+  .metric{background:var(--panel);border:1px solid var(--line);border-radius:12px;
+    padding:16px 16px 14px;box-shadow:var(--shadow)}
+  .metric .k{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.06em;
+    text-transform:uppercase;color:var(--muted)}
+  .metric .v{font-family:Archivo,sans-serif;font-weight:800;font-size:32px;line-height:1.05;margin-top:8px;letter-spacing:-.02em}
+  .metric .n{font-size:12px;color:var(--muted);margin-top:3px}
+  .metric.flag .v{color:var(--alto)}
+  /* sections */
+  section{background:var(--panel);border:1px solid var(--line);border-radius:14px;
+    padding:22px;margin-bottom:20px;box-shadow:var(--shadow)}
+  .sec-h{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:4px;flex-wrap:wrap}
+  .sec-h h2{font-family:Archivo,sans-serif;font-weight:700;font-size:19px;letter-spacing:-.01em;margin:0}
+  .sec-h .num{font-family:"IBM Plex Mono",monospace;font-size:12px;color:var(--steel);font-weight:600}
+  .sec-note{color:var(--muted);font-size:13px;margin:2px 0 18px}
+  /* gap bars */
+  .theme{display:grid;grid-template-columns:150px 1fr 54px;gap:14px;align-items:center;padding:9px 0;border-top:1px solid var(--line)}
+  .theme:first-of-type{border-top:none}
+  .theme .tl{font-size:13px;font-weight:600}
+  .theme .tl small{display:block;color:var(--muted);font-weight:400;font-size:11px}
+  .bar{height:22px;border-radius:6px;overflow:hidden;display:flex;background:#EEF2F6;border:1px solid var(--line)}
+  .bar span{display:block;height:100%}
+  .seg-im{background:var(--steel)} .seg-pa{background:#9DBBD2} .seg-ni{background:#E4EAF0}
+  .theme .pct{font-family:"IBM Plex Mono",monospace;font-weight:600;text-align:right;font-size:14px}
+  .legend{display:flex;gap:16px;flex-wrap:wrap;margin-top:14px;font-size:12px;color:var(--muted)}
+  .legend b{display:inline-block;width:11px;height:11px;border-radius:3px;margin-right:6px;vertical-align:-1px}
+  /* matrix */
+  .toggle{display:inline-flex;border:1px solid var(--line);border-radius:9px;overflow:hidden}
+  .toggle button{font-family:"IBM Plex Mono",monospace;font-size:12px;font-weight:600;
+    border:0;background:var(--panel);color:var(--muted);padding:7px 13px;cursor:pointer}
+  .toggle button.on{background:var(--ink);color:#fff}
+  .matrix-wrap{display:grid;grid-template-columns:26px 1fr;gap:8px;margin-top:8px}
+  .yaxis{writing-mode:vertical-rl;transform:rotate(180deg);text-align:center;
+    font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--muted);letter-spacing:.1em}
+  .matrix{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
+  .cell{aspect-ratio:1/1;border-radius:8px;position:relative;display:flex;align-items:flex-start;
+    justify-content:flex-end;padding:6px;border:1px solid rgba(16,32,43,.06)}
+  .cell .lvl{position:absolute;left:7px;bottom:5px;font-family:"IBM Plex Mono",monospace;
+    font-size:10px;color:rgba(16,32,43,.4)}
+  .chip{font-family:"IBM Plex Mono",monospace;font-size:11px;font-weight:600;color:#fff;
+    background:var(--ink);border-radius:5px;padding:2px 5px;margin:1px;cursor:default;box-shadow:0 1px 2px rgba(0,0,0,.15)}
+  .xaxis{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin:8px 0 0 34px;
+    font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--muted);text-align:center}
+  .axis-cap{text-align:center;font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--muted);
+    letter-spacing:.1em;margin-top:2px}
+  .risk-detail{margin-top:14px;background:var(--paper);border:1px solid var(--line);border-radius:10px;
+    padding:12px 14px;font-size:13px;min-height:44px}
+  .risk-detail .rid{font-family:"IBM Plex Mono",monospace;font-weight:600;color:var(--steel)}
+  /* tables */
+  table{width:100%;border-collapse:collapse;font-size:13px}
+  th{text-align:left;font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.04em;
+    text-transform:uppercase;color:var(--muted);font-weight:600;padding:8px 10px;border-bottom:1px solid var(--line)}
+  td{padding:9px 10px;border-bottom:1px solid var(--line);vertical-align:middle}
+  tr:last-child td{border-bottom:none}
+  .faixa{font-family:"IBM Plex Mono",monospace;font-size:11px;font-weight:600;color:#fff;padding:2px 8px;border-radius:20px;white-space:nowrap}
+  .f-Baixo{background:var(--baixo)} .f-Medio{background:var(--medio)} .f-Alto{background:var(--alto)} .f-Critico{background:var(--critico)}
+  .arrow{color:var(--muted);font-family:"IBM Plex Mono",monospace}
+  .sem{display:inline-flex;align-items:center;gap:7px;font-size:12px;font-weight:600}
+  .sem b{width:9px;height:9px;border-radius:50%;display:inline-block}
+  .ok{color:var(--baixo)} .fail{color:var(--critico)} .warn{color:var(--medio)}
+  .kgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .kpi{border:1px solid var(--line);border-radius:10px;padding:12px 14px;background:var(--panel)}
+  .kpi .kn{font-size:13px;font-weight:600}
+  .kpi .kv{font-family:"IBM Plex Mono",monospace;margin-top:6px;font-size:13px;color:var(--muted)}
+  .kpi .kv strong{color:var(--ink);font-size:16px}
+  footer{margin-top:30px;color:var(--muted);font-size:12px;text-align:center;line-height:1.7}
+  footer a{color:var(--steel);text-decoration:none}
+  .disc{font-size:11px;color:var(--muted);background:#FFF7E6;border:1px solid #F0E2BC;
+    border-radius:8px;padding:8px 12px;margin-top:8px;font-family:"IBM Plex Mono",monospace}
+  @media(max-width:720px){
+    .metrics{grid-template-columns:1fr 1fr}
+    .theme{grid-template-columns:110px 1fr 46px;gap:10px}
+    .kgrid{grid-template-columns:1fr}
+    .hide-sm{display:none}
+  }
+  @media(prefers-reduced-motion:no-preference){
+    .bar span{transition:width .6s cubic-bezier(.2,.7,.2,1)}
+    .metric,.chip{transition:transform .15s ease}
+    .chip:hover{transform:translateY(-1px)}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div class="eyebrow">Estudo de caso · ISO/IEC 27001:2022 · GRC Analytics</div>
+    <h1>Painel de Postura de Segurança — SGSI Aurora</h1>
+    <p class="sub">Leitura gerencial do Sistema de Gestão de Segurança da Informação da Aurora Comércio Digital: maturidade dos controles do Anexo A, matriz de risco 5×5 e indicadores ISO/IEC 27004. Dados reais da planilha de riscos e SoA do portfólio.</p>
+    <div class="statusline">
+      <span><span class="dot" style="background:var(--baixo)"></span>Fonte: SGSI-Aurora-Riscos-e-SoA.xlsx</span>
+      <span><span class="dot" style="background:var(--steel)"></span>93 controles avaliados</span>
+      <span><span class="dot" style="background:var(--alto)"></span>empresa fictícia · fins didáticos</span>
+    </div>
+  </header>
+
+  <div class="metrics" id="metrics"></div>
+
+  <section>
+    <div class="sec-h"><h2>Gap analysis por tema do Anexo A</h2><span class="num">01</span></div>
+    <p class="sec-note">Maturidade calculada a partir do status de cada controle — Implementado 100%, Parcial 50%, Não implementado 0%.</p>
+    <div id="themes"></div>
+    <div class="legend">
+      <span><b class="seg-im" style="background:var(--steel)"></b>Implementado</span>
+      <span><b style="background:#9DBBD2"></b>Parcial</span>
+      <span><b style="background:#E4EAF0"></b>Não implementado</span>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-h">
+      <h2>Matriz de risco 5×5</h2>
+      <div class="toggle" id="toggle">
+        <button data-mode="inerente" class="on">Inerente</button>
+        <button data-mode="residual">Residual</button>
+      </div>
+    </div>
+    <p class="sec-note">Probabilidade × Impacto. Cada etiqueta é um risco posicionado na célula; toque para ver o detalhe. Verde = Baixo · amarelo = Médio · laranja = Alto · vermelho = Crítico.</p>
+    <div class="matrix-wrap">
+      <div class="yaxis">PROBABILIDADE →</div>
+      <div class="matrix" id="matrix"></div>
+    </div>
+    <div class="xaxis" id="xaxis"></div>
+    <div class="axis-cap">IMPACTO →</div>
+    <div class="risk-detail" id="detail">Toque em um risco na matriz para ver ameaça, vulnerabilidade e controles de tratamento.</div>
+  </section>
+
+  <section>
+    <div class="sec-h"><h2>Riscos: inerente vs. residual</h2><span class="num">02</span></div>
+    <p class="sec-note">Efeito do plano de tratamento sobre cada risco. Residual ≥ 10 (Alto/Crítico) exige aceite formal da Direção.</p>
+    <div style="overflow-x:auto"><table id="risktable"></table></div>
+  </section>
+
+  <section>
+    <div class="sec-h"><h2>Indicadores de desempenho (ISO/IEC 27004)</h2><span class="num">03</span></div>
+    <p class="sec-note">Meta vs. valor do 1º ciclo de medição. Verde = dentro da meta · vermelho = fora.</p>
+    <div class="kgrid" id="kpis"></div>
+  </section>
+
+  <footer>
+    <strong>Davi de Oliveira Carlos Gil</strong> — Segurança da Informação · GRC · Defesa Cibernética<br>
+    <a href="https://github.com/davi-gil/sgsi-aurora-analytics">github.com/davi-gil/sgsi-aurora-analytics</a> ·
+    <a href="https://github.com/davi-gil/sgsi-aurora-iso27001">portfólio SGSI (documental)</a> ·
+    <a href="https://linkedin.com/in/davi-gil">LinkedIn</a>
+    <div class="disc">Aurora Comércio Digital Ltda. é uma empresa fictícia, criada para fins didáticos e de portfólio. Nenhum dado real de organização é utilizado.</div>
+  </footer>
+</div>
+
+<script>
+const DB = {"controles": [{"controle_id": "A.5.1", "tema": "A.5", "nome_curto": "Políticas de segurança da informação", "aplicavel": "1", "status": "Parcial", "justificativa": "Requisito fundamental do SGSI"}, {"controle_id": "A.5.2", "tema": "A.5", "nome_curto": "Papéis e responsabilidades de segurança", "aplicavel": "1", "status": "Parcial", "justificativa": "Definição na PSI"}, {"controle_id": "A.5.3", "tema": "A.5", "nome_curto": "Segregação de funções", "aplicavel": "1", "status": "Não implementado", "justificativa": "Reduz risco de fraude/erro"}, {"controle_id": "A.5.4", "tema": "A.5", "nome_curto": "Responsabilidades da direção", "aplicavel": "1", "status": "Parcial", "justificativa": "Comprometimento da liderança"}, {"controle_id": "A.5.5", "tema": "A.5", "nome_curto": "Contato com autoridades", "aplicavel": "1", "status": "Não implementado", "justificativa": "Notificação à ANPD e órgãos"}, {"controle_id": "A.5.6", "tema": "A.5", "nome_curto": "Contato com grupos de interesse especial", "aplicavel": "1", "status": "Não implementado", "justificativa": "Fontes de inteligência de ameaças"}, {"controle_id": "A.5.7", "tema": "A.5", "nome_curto": "Inteligência de ameaças", "aplicavel": "1", "status": "Não implementado", "justificativa": "Antecipação a ameaças ao e-commerce"}, {"controle_id": "A.5.8", "tema": "A.5", "nome_curto": "Segurança da informação na gestão de projetos", "aplicavel": "1", "status": "Não implementado", "justificativa": "Segurança desde a concepção"}, {"controle_id": "A.5.9", "tema": "A.5", "nome_curto": "Inventário de informações e ativos", "aplicavel": "1", "status": "Implementado", "justificativa": "Base da gestão de riscos"}, {"controle_id": "A.5.10", "tema": "A.5", "nome_curto": "Uso aceitável de ativos", "aplicavel": "1", "status": "Parcial", "justificativa": "Política de uso aceitável"}, {"controle_id": "A.5.11", "tema": "A.5", "nome_curto": "Devolução de ativos", "aplicavel": "1", "status": "Parcial", "justificativa": "Processo de desligamento"}, {"controle_id": "A.5.12", "tema": "A.5", "nome_curto": "Classificação da informação", "aplicavel": "1", "status": "Parcial", "justificativa": "Rotular por sensibilidade"}, {"controle_id": "A.5.13", "tema": "A.5", "nome_curto": "Rotulagem de informações", "aplicavel": "1", "status": "Não implementado", "justificativa": "Decorre da classificação"}, {"controle_id": "A.5.14", "tema": "A.5", "nome_curto": "Transferência de informações", "aplicavel": "1", "status": "Parcial", "justificativa": "Proteção em trânsito"}, {"controle_id": "A.5.15", "tema": "A.5", "nome_curto": "Controle de acesso", "aplicavel": "1", "status": "Parcial", "justificativa": "Menor privilégio"}, {"controle_id": "A.5.16", "tema": "A.5", "nome_curto": "Gestão de identidades", "aplicavel": "1", "status": "Parcial", "justificativa": "Ciclo de vida de identidades"}, {"controle_id": "A.5.17", "tema": "A.5", "nome_curto": "Informações de autenticação", "aplicavel": "1", "status": "Parcial", "justificativa": "Gestão de credenciais"}, {"controle_id": "A.5.18", "tema": "A.5", "nome_curto": "Direitos de acesso", "aplicavel": "1", "status": "Parcial", "justificativa": "Provisionamento/revogação"}, {"controle_id": "A.5.19", "tema": "A.5", "nome_curto": "Segurança nas relações com fornecedores", "aplicavel": "1", "status": "Parcial", "justificativa": "Nuvem e gateway"}, {"controle_id": "A.5.20", "tema": "A.5", "nome_curto": "Segurança em acordos com fornecedores", "aplicavel": "1", "status": "Não implementado", "justificativa": "Cláusulas contratuais"}, {"controle_id": "A.5.21", "tema": "A.5", "nome_curto": "Gestão da segurança na cadeia de suprimentos de TIC", "aplicavel": "1", "status": "Não implementado", "justificativa": "Dependência de terceiros"}, {"controle_id": "A.5.22", "tema": "A.5", "nome_curto": "Monitoramento e mudança de serviços de fornecedores", "aplicavel": "1", "status": "Não implementado", "justificativa": "Acompanhar SLAs"}, {"controle_id": "A.5.23", "tema": "A.5", "nome_curto": "Segurança no uso de serviços em nuvem", "aplicavel": "1", "status": "Parcial", "justificativa": "Responsabilidade compartilhada"}, {"controle_id": "A.5.24", "tema": "A.5", "nome_curto": "Planejamento de gestão de incidentes", "aplicavel": "1", "status": "Não implementado", "justificativa": "Base da resposta a incidentes"}, {"controle_id": "A.5.25", "tema": "A.5", "nome_curto": "Avaliação e decisão sobre eventos de segurança", "aplicavel": "1", "status": "Não implementado", "justificativa": "Triagem de eventos"}, {"controle_id": "A.5.26", "tema": "A.5", "nome_curto": "Resposta a incidentes de segurança", "aplicavel": "1", "status": "Não implementado", "justificativa": "Contenção e recuperação"}, {"controle_id": "A.5.27", "tema": "A.5", "nome_curto": "Aprendizado com incidentes", "aplicavel": "1", "status": "Não implementado", "justificativa": "Melhoria contínua"}, {"controle_id": "A.5.28", "tema": "A.5", "nome_curto": "Coleta de evidências", "aplicavel": "1", "status": "Não implementado", "justificativa": "Suporte a análise forense"}, {"controle_id": "A.5.29", "tema": "A.5", "nome_curto": "Segurança durante disrupção", "aplicavel": "1", "status": "Não implementado", "justificativa": "Continuidade"}, {"controle_id": "A.5.30", "tema": "A.5", "nome_curto": "Prontidão de TIC para continuidade de negócio", "aplicavel": "1", "status": "Não implementado", "justificativa": "Recuperação do e-commerce"}, {"controle_id": "A.5.31", "tema": "A.5", "nome_curto": "Requisitos legais, estatutários e contratuais", "aplicavel": "1", "status": "Parcial", "justificativa": "LGPD e demais"}, {"controle_id": "A.5.32", "tema": "A.5", "nome_curto": "Direitos de propriedade intelectual", "aplicavel": "1", "status": "Implementado", "justificativa": "Licenciamento de software"}, {"controle_id": "A.5.33", "tema": "A.5", "nome_curto": "Proteção de registros", "aplicavel": "1", "status": "Parcial", "justificativa": "Retenção conforme LGPD"}, {"controle_id": "A.5.34", "tema": "A.5", "nome_curto": "Privacidade e proteção de PII", "aplicavel": "1", "status": "Parcial", "justificativa": "Núcleo da adequação à LGPD"}, {"controle_id": "A.5.35", "tema": "A.5", "nome_curto": "Análise crítica independente de segurança", "aplicavel": "1", "status": "Não implementado", "justificativa": "Auditoria independente"}, {"controle_id": "A.5.36", "tema": "A.5", "nome_curto": "Conformidade com políticas e normas", "aplicavel": "1", "status": "Parcial", "justificativa": "Verificação de aderência"}, {"controle_id": "A.5.37", "tema": "A.5", "nome_curto": "Procedimentos operacionais documentados", "aplicavel": "1", "status": "Não implementado", "justificativa": "Padronização operacional"}, {"controle_id": "A.6.1", "tema": "A.6", "nome_curto": "Triagem (background check)", "aplicavel": "1", "status": "Não implementado", "justificativa": "Verificação de candidatos a área sensível"}, {"controle_id": "A.6.2", "tema": "A.6", "nome_curto": "Termos e condições de contratação", "aplicavel": "1", "status": "Parcial", "justificativa": "Cláusulas de segurança no contrato"}, {"controle_id": "A.6.3", "tema": "A.6", "nome_curto": "Conscientização, educação e treinamento", "aplicavel": "1", "status": "Não implementado", "justificativa": "Programa de awareness"}, {"controle_id": "A.6.4", "tema": "A.6", "nome_curto": "Processo disciplinar", "aplicavel": "1", "status": "Não implementado", "justificativa": "Consequências por violação"}, {"controle_id": "A.6.5", "tema": "A.6", "nome_curto": "Responsabilidades após encerramento do vínculo", "aplicavel": "1", "status": "Parcial", "justificativa": "Revogação de acessos"}, {"controle_id": "A.6.6", "tema": "A.6", "nome_curto": "Acordos de confidencialidade (NDA)", "aplicavel": "1", "status": "Parcial", "justificativa": "Proteção de informação sensível"}, {"controle_id": "A.6.7", "tema": "A.6", "nome_curto": "Trabalho remoto", "aplicavel": "1", "status": "Parcial", "justificativa": "Equipe de TI atua remotamente"}, {"controle_id": "A.6.8", "tema": "A.6", "nome_curto": "Reporte de eventos de segurança", "aplicavel": "1", "status": "Implementado", "justificativa": "Canal para colaboradores reportarem"}, {"controle_id": "A.7.1", "tema": "A.7", "nome_curto": "Perímetros de segurança física", "aplicavel": "1", "status": "Implementado", "justificativa": "Sede em São Paulo"}, {"controle_id": "A.7.2", "tema": "A.7", "nome_curto": "Entrada física", "aplicavel": "1", "status": "Implementado", "justificativa": "Controle de acesso à sede"}, {"controle_id": "A.7.3", "tema": "A.7", "nome_curto": "Segurança de escritórios e salas", "aplicavel": "1", "status": "Parcial", "justificativa": "Áreas de trabalho"}, {"controle_id": "A.7.4", "tema": "A.7", "nome_curto": "Monitoramento de segurança física", "aplicavel": "1", "status": "Parcial", "justificativa": "CFTV na sede"}, {"controle_id": "A.7.5", "tema": "A.7", "nome_curto": "Proteção contra ameaças físicas e ambientais", "aplicavel": "1", "status": "Parcial", "justificativa": "Incêndio, energia"}, {"controle_id": "A.7.6", "tema": "A.7", "nome_curto": "Trabalho em áreas seguras", "aplicavel": "0", "status": "N/A", "justificativa": "Sem área classificada como segura"}, {"controle_id": "A.7.7", "tema": "A.7", "nome_curto": "Mesa limpa e tela limpa", "aplicavel": "1", "status": "Não implementado", "justificativa": "Boa prática de escritório"}, {"controle_id": "A.7.8", "tema": "A.7", "nome_curto": "Localização e proteção de equipamentos", "aplicavel": "1", "status": "Parcial", "justificativa": "Estações de trabalho"}, {"controle_id": "A.7.9", "tema": "A.7", "nome_curto": "Segurança de ativos fora das instalações", "aplicavel": "1", "status": "Não implementado", "justificativa": "Notebooks em trabalho remoto"}, {"controle_id": "A.7.10", "tema": "A.7", "nome_curto": "Mídia de armazenamento", "aplicavel": "1", "status": "Não implementado", "justificativa": "Controle de mídias removíveis"}, {"controle_id": "A.7.11", "tema": "A.7", "nome_curto": "Utilidades de suporte", "aplicavel": "1", "status": "Implementado", "justificativa": "Energia/refrigeração (via nuvem)"}, {"controle_id": "A.7.12", "tema": "A.7", "nome_curto": "Segurança do cabeamento", "aplicavel": "0", "status": "N/A", "justificativa": "Infra majoritariamente em nuvem"}, {"controle_id": "A.7.13", "tema": "A.7", "nome_curto": "Manutenção de equipamentos", "aplicavel": "1", "status": "Implementado", "justificativa": "Manutenção de estações"}, {"controle_id": "A.7.14", "tema": "A.7", "nome_curto": "Descarte ou reutilização segura de equipamentos", "aplicavel": "1", "status": "Não implementado", "justificativa": "Sanitização antes de descarte"}, {"controle_id": "A.8.1", "tema": "A.8", "nome_curto": "Dispositivos de endpoint", "aplicavel": "1", "status": "Parcial", "justificativa": "Estações e notebooks"}, {"controle_id": "A.8.2", "tema": "A.8", "nome_curto": "Direitos de acesso privilegiado", "aplicavel": "1", "status": "Parcial", "justificativa": "Contas admin"}, {"controle_id": "A.8.3", "tema": "A.8", "nome_curto": "Restrição de acesso à informação", "aplicavel": "1", "status": "Parcial", "justificativa": "Menor privilégio nos dados"}, {"controle_id": "A.8.4", "tema": "A.8", "nome_curto": "Acesso ao código-fonte", "aplicavel": "1", "status": "Parcial", "justificativa": "Repositório da aplicação"}, {"controle_id": "A.8.5", "tema": "A.8", "nome_curto": "Autenticação segura", "aplicavel": "1", "status": "Não implementado", "justificativa": "MFA em contas críticas"}, {"controle_id": "A.8.6", "tema": "A.8", "nome_curto": "Gestão de capacidade", "aplicavel": "1", "status": "Parcial", "justificativa": "Dimensionamento da nuvem"}, {"controle_id": "A.8.7", "tema": "A.8", "nome_curto": "Proteção contra malware", "aplicavel": "1", "status": "Parcial", "justificativa": "Antivírus/EDR"}, {"controle_id": "A.8.8", "tema": "A.8", "nome_curto": "Gestão de vulnerabilidades técnicas", "aplicavel": "1", "status": "Parcial", "justificativa": "Patch e pentest"}, {"controle_id": "A.8.9", "tema": "A.8", "nome_curto": "Gestão de configuração", "aplicavel": "1", "status": "Parcial", "justificativa": "Hardening de servidores"}, {"controle_id": "A.8.10", "tema": "A.8", "nome_curto": "Exclusão de informações", "aplicavel": "1", "status": "Não implementado", "justificativa": "Descarte conforme LGPD"}, {"controle_id": "A.8.11", "tema": "A.8", "nome_curto": "Mascaramento de dados", "aplicavel": "1", "status": "Não implementado", "justificativa": "Proteção de PII em ambientes"}, {"controle_id": "A.8.12", "tema": "A.8", "nome_curto": "Prevenção de vazamento de dados (DLP)", "aplicavel": "1", "status": "Não implementado", "justificativa": "Controle de exfiltração"}, {"controle_id": "A.8.13", "tema": "A.8", "nome_curto": "Backup de informações", "aplicavel": "1", "status": "Parcial", "justificativa": "Rotina de backup"}, {"controle_id": "A.8.14", "tema": "A.8", "nome_curto": "Redundância de recursos de processamento", "aplicavel": "1", "status": "Não implementado", "justificativa": "Alta disponibilidade"}, {"controle_id": "A.8.15", "tema": "A.8", "nome_curto": "Registro de logs", "aplicavel": "1", "status": "Parcial", "justificativa": "Logs de sistema e aplicação"}, {"controle_id": "A.8.16", "tema": "A.8", "nome_curto": "Atividades de monitoramento", "aplicavel": "1", "status": "Não implementado", "justificativa": "SIEM/monitoramento"}, {"controle_id": "A.8.17", "tema": "A.8", "nome_curto": "Sincronização de relógios", "aplicavel": "1", "status": "Implementado", "justificativa": "Consistência de logs (NTP)"}, {"controle_id": "A.8.18", "tema": "A.8", "nome_curto": "Uso de programas utilitários privilegiados", "aplicavel": "1", "status": "Não implementado", "justificativa": "Restrição de ferramentas admin"}, {"controle_id": "A.8.19", "tema": "A.8", "nome_curto": "Instalação de software em sistemas operacionais", "aplicavel": "1", "status": "Parcial", "justificativa": "Controle de instalação"}, {"controle_id": "A.8.20", "tema": "A.8", "nome_curto": "Segurança de redes", "aplicavel": "1", "status": "Parcial", "justificativa": "Firewall/segmentação"}, {"controle_id": "A.8.21", "tema": "A.8", "nome_curto": "Segurança de serviços de rede", "aplicavel": "1", "status": "Parcial", "justificativa": "Serviços expostos"}, {"controle_id": "A.8.22", "tema": "A.8", "nome_curto": "Segregação de redes", "aplicavel": "1", "status": "Não implementado", "justificativa": "Separar produção e admin"}, {"controle_id": "A.8.23", "tema": "A.8", "nome_curto": "Filtragem web", "aplicavel": "1", "status": "Não implementado", "justificativa": "Bloqueio de sites maliciosos"}, {"controle_id": "A.8.24", "tema": "A.8", "nome_curto": "Uso de criptografia", "aplicavel": "1", "status": "Parcial", "justificativa": "TLS e dados em repouso"}, {"controle_id": "A.8.25", "tema": "A.8", "nome_curto": "Ciclo de vida de desenvolvimento seguro", "aplicavel": "1", "status": "Não implementado", "justificativa": "SDLC da aplicação"}, {"controle_id": "A.8.26", "tema": "A.8", "nome_curto": "Requisitos de segurança de aplicações", "aplicavel": "1", "status": "Não implementado", "justificativa": "Validação de entrada (anti-SQLi)"}, {"controle_id": "A.8.27", "tema": "A.8", "nome_curto": "Arquitetura e engenharia de sistemas seguros", "aplicavel": "1", "status": "Não implementado", "justificativa": "Princípios de projeto seguro"}, {"controle_id": "A.8.28", "tema": "A.8", "nome_curto": "Codificação segura", "aplicavel": "1", "status": "Não implementado", "justificativa": "Boas práticas de código"}, {"controle_id": "A.8.29", "tema": "A.8", "nome_curto": "Testes de segurança em desenvolvimento", "aplicavel": "1", "status": "Não implementado", "justificativa": "SAST/DAST/pentest"}, {"controle_id": "A.8.30", "tema": "A.8", "nome_curto": "Desenvolvimento terceirizado", "aplicavel": "0", "status": "N/A", "justificativa": "Desenvolvimento é interno"}, {"controle_id": "A.8.31", "tema": "A.8", "nome_curto": "Separação de ambientes (dev/test/prod)", "aplicavel": "1", "status": "Parcial", "justificativa": "Isolar produção"}, {"controle_id": "A.8.32", "tema": "A.8", "nome_curto": "Gestão de mudanças", "aplicavel": "1", "status": "Parcial", "justificativa": "Controle de mudanças"}, {"controle_id": "A.8.33", "tema": "A.8", "nome_curto": "Informações de teste", "aplicavel": "1", "status": "Não implementado", "justificativa": "Dados de teste sem PII real"}, {"controle_id": "A.8.34", "tema": "A.8", "nome_curto": "Proteção de sistemas durante testes de auditoria", "aplicavel": "1", "status": "Não implementado", "justificativa": "Cuidado em auditorias"}], "riscos": [{"risco_id": "R01", "ativo": "Base de clientes", "ameaca": "Atacante externo", "vulnerabilidade": "SQL Injection na aplicação", "prob_inerente": "4", "impacto_inerente": "5", "nivel_inerente": "20", "faixa_inerente": "Crítico", "tratamento": "Mitigar", "controles_anexo_a": "A.8.26, A.8.28, A.8.8", "prob_residual": "2", "impacto_residual": "4", "nivel_residual": "8", "responsavel": "Equipe TI/Dev"}, {"risco_id": "R02", "ativo": "Contas admin", "ameaca": "Credential stuffing", "vulnerabilidade": "Ausência de MFA", "prob_inerente": "4", "impacto_inerente": "4", "nivel_inerente": "16", "faixa_inerente": "Crítico", "tratamento": "Mitigar", "controles_anexo_a": "A.8.5, A.8.2", "prob_residual": "1", "impacto_residual": "4", "nivel_residual": "4", "responsavel": "Equipe TI"}, {"risco_id": "R03", "ativo": "E-commerce", "ameaca": "DDoS / falha", "vulnerabilidade": "Sem redundância", "prob_inerente": "3", "impacto_inerente": "5", "nivel_inerente": "15", "faixa_inerente": "Crítico", "tratamento": "Mitigar/Transferir", "controles_anexo_a": "A.8.14, A.5.30, A.8.6", "prob_residual": "2", "impacto_residual": "5", "nivel_residual": "10", "responsavel": "Equipe TI"}, {"risco_id": "R04", "ativo": "Backups/dados", "ameaca": "Ransomware", "vulnerabilidade": "Backup sem teste; sem EDR", "prob_inerente": "3", "impacto_inerente": "5", "nivel_inerente": "15", "faixa_inerente": "Crítico", "tratamento": "Mitigar", "controles_anexo_a": "A.8.13, A.8.7, A.6.3", "prob_residual": "2", "impacto_residual": "3", "nivel_residual": "6", "responsavel": "Equipe TI"}, {"risco_id": "R05", "ativo": "SGSI", "ameaca": "Incidente sem resposta", "vulnerabilidade": "Sem plano de resposta", "prob_inerente": "4", "impacto_inerente": "3", "nivel_inerente": "12", "faixa_inerente": "Alto", "tratamento": "Mitigar", "controles_anexo_a": "A.5.24, A.5.26, A.5.27", "prob_residual": "2", "impacto_residual": "3", "nivel_residual": "6", "responsavel": "Resp. SGSI"}, {"risco_id": "R06", "ativo": "Dados pessoais", "ameaca": "Fiscalização ANPD", "vulnerabilidade": "Adequação LGPD incompleta", "prob_inerente": "3", "impacto_inerente": "4", "nivel_inerente": "12", "faixa_inerente": "Alto", "tratamento": "Mitigar", "controles_anexo_a": "A.5.34, A.5.31, A.5.33", "prob_residual": "2", "impacto_residual": "3", "nivel_residual": "6", "responsavel": "DPO"}, {"risco_id": "R07", "ativo": "Servidores", "ameaca": "Exploração de CVE", "vulnerabilidade": "Patches em atraso", "prob_inerente": "4", "impacto_inerente": "3", "nivel_inerente": "12", "faixa_inerente": "Alto", "tratamento": "Mitigar", "controles_anexo_a": "A.8.8, A.8.9", "prob_residual": "2", "impacto_residual": "3", "nivel_residual": "6", "responsavel": "Equipe TI"}, {"risco_id": "R08", "ativo": "Nuvem", "ameaca": "Configuração incorreta", "vulnerabilidade": "Bucket/porta exposta", "prob_inerente": "2", "impacto_inerente": "5", "nivel_inerente": "10", "faixa_inerente": "Alto", "tratamento": "Mitigar", "controles_anexo_a": "A.5.23, A.8.9", "prob_residual": "1", "impacto_residual": "4", "nivel_residual": "4", "responsavel": "Equipe TI"}, {"risco_id": "R09", "ativo": "Colaboradores", "ameaca": "Phishing", "vulnerabilidade": "Falta de awareness", "prob_inerente": "5", "impacto_inerente": "2", "nivel_inerente": "10", "faixa_inerente": "Alto", "tratamento": "Mitigar", "controles_anexo_a": "A.6.3, A.8.23", "prob_residual": "2", "impacto_residual": "3", "nivel_residual": "6", "responsavel": "Resp. SGSI"}, {"risco_id": "R10", "ativo": "Sistemas", "ameaca": "Ex-colaborador", "vulnerabilidade": "Acesso não revogado", "prob_inerente": "3", "impacto_inerente": "3", "nivel_inerente": "9", "faixa_inerente": "Médio", "tratamento": "Mitigar", "controles_anexo_a": "A.6.5, A.5.18", "prob_residual": "2", "impacto_residual": "2", "nivel_residual": "4", "responsavel": "Equipe TI/RH"}], "kpis": [{"kpi_id": "K01", "nome": "Disponibilidade da plataforma", "unidade": "%", "direcao_meta": "maior_igual", "meta": "99.5", "frequencia": "Mensal", "valor_atual": "99.2"}, {"kpi_id": "K02", "nome": "Tempo medio de correcao de vulns criticas", "unidade": "dias", "direcao_meta": "menor_igual", "meta": "7", "frequencia": "Mensal", "valor_atual": "12"}, {"kpi_id": "K03", "nome": "Cobertura de MFA em contas privilegiadas", "unidade": "%", "direcao_meta": "maior_igual", "meta": "100", "frequencia": "Mensal", "valor_atual": "40"}, {"kpi_id": "K04", "nome": "Backups testados (restauracao validada)", "unidade": "%", "direcao_meta": "maior_igual", "meta": "95", "frequencia": "Mensal", "valor_atual": "60"}, {"kpi_id": "K05", "nome": "Incidentes de seguranca registrados", "unidade": "contagem", "direcao_meta": "tendencia_baixa", "meta": "0", "frequencia": "Mensal", "valor_atual": "5"}, {"kpi_id": "K06", "nome": "MTTR - tempo medio de resposta a incidente", "unidade": "horas", "direcao_meta": "menor_igual", "meta": "4", "frequencia": "Por incidente", "valor_atual": "9"}, {"kpi_id": "K07", "nome": "Colaboradores treinados no ano", "unidade": "%", "direcao_meta": "maior_igual", "meta": "90", "frequencia": "Trimestral", "valor_atual": "35"}, {"kpi_id": "K08", "nome": "Cliques em phishing simulado", "unidade": "%", "direcao_meta": "menor_igual", "meta": "5", "frequencia": "Trimestral", "valor_atual": "18"}, {"kpi_id": "K09", "nome": "Controles do Anexo A implementados", "unidade": "%", "direcao_meta": "maior_igual", "meta": "85", "frequencia": "Trimestral", "valor_atual": "9"}], "ativos": [{"ativo_id": "AT01", "nome": "Base de dados de clientes (dados pessoais)", "tipo": "Informação", "proprietario": "DPO", "classificacao": "Restrito", "confidencialidade": "Alta", "integridade": "Alta", "disponibilidade": "Alta"}, {"ativo_id": "AT02", "nome": "Aplicação web de e-commerce", "tipo": "Software", "proprietario": "Equipe TI", "classificacao": "Confidencial", "confidencialidade": "Alta", "integridade": "Alta", "disponibilidade": "Alta"}, {"ativo_id": "AT03", "nome": "Servidores em nuvem (IaaS)", "tipo": "Infraestrutura", "proprietario": "Equipe TI", "classificacao": "Confidencial", "confidencialidade": "Média", "integridade": "Alta", "disponibilidade": "Alta"}, {"ativo_id": "AT04", "nome": "Código-fonte da aplicação", "tipo": "Software", "proprietario": "Equipe TI", "classificacao": "Confidencial", "confidencialidade": "Alta", "integridade": "Alta", "disponibilidade": "Média"}, {"ativo_id": "AT05", "nome": "Integração com gateway de pagamento", "tipo": "Serviço", "proprietario": "Equipe TI", "classificacao": "Restrito", "confidencialidade": "Alta", "integridade": "Alta", "disponibilidade": "Alta"}, {"ativo_id": "AT06", "nome": "Backups", "tipo": "Informação", "proprietario": "Equipe TI", "classificacao": "Confidencial", "confidencialidade": "Alta", "integridade": "Alta", "disponibilidade": "Alta"}, {"ativo_id": "AT07", "nome": "Contas administrativas / credenciais", "tipo": "Identidade", "proprietario": "Equipe TI", "classificacao": "Restrito", "confidencialidade": "Alta", "integridade": "Alta", "disponibilidade": "Média"}, {"ativo_id": "AT08", "nome": "Estações de trabalho dos colaboradores", "tipo": "Hardware", "proprietario": "Equipe TI", "classificacao": "Uso Interno", "confidencialidade": "Média", "integridade": "Média", "disponibilidade": "Média"}, {"ativo_id": "AT09", "nome": "E-mails corporativos", "tipo": "Serviço", "proprietario": "Equipe TI", "classificacao": "Uso Interno", "confidencialidade": "Média", "integridade": "Média", "disponibilidade": "Média"}, {"ativo_id": "AT10", "nome": "Logs de sistema e aplicação", "tipo": "Informação", "proprietario": "Equipe TI", "classificacao": "Confidencial", "confidencialidade": "Média", "integridade": "Alta", "disponibilidade": "Média"}]};
+const norm = s => (s||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"");
+const faixa = n => n<=4?"Baixo":n<=9?"Medio":n<=14?"Alto":"Critico";
+const cellColor = n => n<=4?"var(--grid1)":n<=9?"var(--grid2)":n<=14?"var(--grid3)":"var(--grid4)";
+
+// ---- metrics ----
+const aplic = DB.controles.filter(c=>c.aplicavel==="1");
+const impl = aplic.filter(c=>norm(c.status)==="Implementado").length;
+const parc = aplic.filter(c=>norm(c.status)==="Parcial").length;
+const mat = Math.round(1000*(impl+parc*0.5)/aplic.length)/10;
+const resAltos = DB.riscos.filter(r=>+r.nivel_residual>=10).length;
+document.getElementById("metrics").innerHTML = [
+  ["Maturidade geral", mat.toString().replace(".",",")+"%", aplic.length+" controles aplicáveis",""],
+  ["Controles Anexo A", "93", impl+" implementados · "+parc+" parciais",""],
+  ["Riscos mapeados", DB.riscos.length, "matriz 5×5 · inerente e residual",""],
+  ["Residual Alto/Crítico", resAltos, "exige aceite da Direção","flag"],
+].map(([k,v,n,f])=>`<div class="metric ${f}"><div class="k">${k}</div><div class="v mono">${v}</div><div class="n">${n}</div></div>`).join("");
+
+// ---- gap por tema ----
+const temas={};
+DB.controles.forEach(c=>{const t=c.tema;(temas[t]=temas[t]||{im:0,pa:0,ni:0,ap:0});
+  if(c.aplicavel==="1"){temas[t].ap++;const s=norm(c.status);
+    if(s==="Implementado")temas[t].im++;else if(s==="Parcial")temas[t].pa++;else temas[t].ni++;}});
+const nomeTema={"A.5":"Organizacionais","A.6":"Pessoas","A.7":"Físicos","A.8":"Tecnológicos"};
+document.getElementById("themes").innerHTML = Object.keys(temas).sort().map(t=>{
+  const d=temas[t]; const m=Math.round(1000*(d.im+d.pa*0.5)/d.ap)/10;
+  const w=x=>100*x/d.ap;
+  return `<div class="theme">
+    <div class="tl">${t} <small>${nomeTema[t]} · ${d.ap} aplic.</small></div>
+    <div class="bar" title="${d.im} impl · ${d.pa} parcial · ${d.ni} não impl">
+      <span class="seg-im" style="width:${w(d.im)}%"></span>
+      <span class="seg-pa" style="width:${w(d.pa)}%"></span>
+      <span class="seg-ni" style="width:${w(d.ni)}%"></span>
+    </div>
+    <div class="pct">${m.toString().replace(".",",")}%</div></div>`;
+}).join("");
+
+// ---- matriz 5x5 ----
+let mode="inerente";
+const xaxis=document.getElementById("xaxis");
+xaxis.innerHTML=[1,2,3,4,5].map(i=>`<div>${i}</div>`).join("");
+function drawMatrix(){
+  const m=document.getElementById("matrix"); m.innerHTML="";
+  for(let p=5;p>=1;p--){for(let i=1;i<=5;i++){
+    const lvl=p*i;
+    const cell=document.createElement("div");
+    cell.className="cell"; cell.style.background=cellColor(lvl);
+    cell.innerHTML=`<span class="lvl">${lvl}</span>`;
+    DB.riscos.forEach(r=>{
+      const pr=+r["prob_"+(mode==="inerente"?"inerente":"residual")];
+      const im=+r["impacto_"+(mode==="inerente"?"inerente":"residual")];
+      if(pr===p && im===i){
+        const chip=document.createElement("span");
+        chip.className="chip"; chip.textContent=r.risco_id;
+        const nv=+r["nivel_"+(mode==="inerente"?"inerente":"residual")];
+        chip.style.background=({Baixo:"var(--baixo)",Medio:"var(--medio)",Alto:"var(--alto)",Critico:"var(--critico)"})[faixa(nv)];
+        chip.onclick=()=>showDetail(r);
+        cell.appendChild(chip);
+      }
+    });
+    m.appendChild(cell);
+  }}
+}
+function showDetail(r){
+  const nv=+r["nivel_"+(mode==="inerente"?"inerente":"residual")];
+  document.getElementById("detail").innerHTML=
+    `<span class="rid">${r.risco_id}</span> — ${r.vulnerabilidade}
+     &nbsp;<span class="faixa f-${faixa(nv)}">${faixa(nv)} · ${nv}</span><br>
+     <span style="color:var(--muted)">Ameaça:</span> ${r.ameaca}
+     &nbsp;·&nbsp;<span style="color:var(--muted)">Ativo:</span> ${r.ativo}
+     &nbsp;·&nbsp;<span style="color:var(--muted)">Controles:</span> <span class="mono">${r.controles_anexo_a}</span>
+     &nbsp;·&nbsp;<span style="color:var(--muted)">Resp.:</span> ${r.responsavel}`;
+}
+document.getElementById("toggle").addEventListener("click",e=>{
+  if(e.target.dataset.mode){mode=e.target.dataset.mode;
+    document.querySelectorAll("#toggle button").forEach(b=>b.classList.toggle("on",b.dataset.mode===mode));
+    drawMatrix();}
+});
+drawMatrix();
+
+// ---- risk table ----
+const rt=DB.riscos.slice().sort((a,b)=>b.nivel_inerente-a.nivel_inerente);
+document.getElementById("risktable").innerHTML=
+  `<thead><tr><th>ID</th><th>Vulnerabilidade</th><th class="hide-sm">Ameaça</th>
+   <th>Inerente</th><th>Residual</th><th class="hide-sm">Redução</th></tr></thead><tbody>`+
+  rt.map(r=>{const ni=+r.nivel_inerente,nr=+r.nivel_residual;
+    return `<tr><td class="mono" style="color:var(--steel);font-weight:600">${r.risco_id}</td>
+    <td>${r.vulnerabilidade}</td><td class="hide-sm" style="color:var(--muted)">${r.ameaca}</td>
+    <td><span class="faixa f-${faixa(ni)}">${ni}</span></td>
+    <td><span class="arrow">→</span> <span class="faixa f-${faixa(nr)}">${nr}</span></td>
+    <td class="hide-sm mono">−${ni-nr}</td></tr>`;}).join("")+"</tbody>";
+
+// ---- kpis ----
+document.getElementById("kpis").innerHTML=DB.kpis.map(k=>{
+  const meta=+k.meta,val=+k.valor_atual;let ok,cls,lbl;
+  if(k.direcao_meta==="maior_igual"){ok=val>=meta;}
+  else if(k.direcao_meta==="menor_igual"){ok=val<=meta;}
+  else{ok=null;}
+  if(ok===null){cls="warn";lbl="Monitorar";}else{cls=ok?"ok":"fail";lbl=ok?"Dentro da meta":"Fora da meta";}
+  const col=cls==="ok"?"var(--baixo)":cls==="fail"?"var(--critico)":"var(--medio)";
+  return `<div class="kpi"><div class="kn">${k.nome}</div>
+    <div class="kv">atual <strong>${(k.valor_atual)}${k.unidade==='%'?'%':''}</strong>
+    &nbsp;·&nbsp;meta ${k.meta}${k.unidade==='%'?'%':' '+k.unidade}</div>
+    <div class="sem ${cls}" style="margin-top:8px"><b style="background:${col}"></b>${lbl}</div></div>`;
+}).join("");
+</script>
+</body>
+</html>

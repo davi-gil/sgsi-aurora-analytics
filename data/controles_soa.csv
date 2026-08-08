@@ -1,0 +1,94 @@
+controle_id,tema,nome_curto,aplicavel,status,justificativa
+A.5.1,A.5,Políticas de segurança da informação,1,Parcial,Requisito fundamental do SGSI
+A.5.2,A.5,Papéis e responsabilidades de segurança,1,Parcial,Definição na PSI
+A.5.3,A.5,Segregação de funções,1,Não implementado,Reduz risco de fraude/erro
+A.5.4,A.5,Responsabilidades da direção,1,Parcial,Comprometimento da liderança
+A.5.5,A.5,Contato com autoridades,1,Não implementado,Notificação à ANPD e órgãos
+A.5.6,A.5,Contato com grupos de interesse especial,1,Não implementado,Fontes de inteligência de ameaças
+A.5.7,A.5,Inteligência de ameaças,1,Não implementado,Antecipação a ameaças ao e-commerce
+A.5.8,A.5,Segurança da informação na gestão de projetos,1,Não implementado,Segurança desde a concepção
+A.5.9,A.5,Inventário de informações e ativos,1,Implementado,Base da gestão de riscos
+A.5.10,A.5,Uso aceitável de ativos,1,Parcial,Política de uso aceitável
+A.5.11,A.5,Devolução de ativos,1,Parcial,Processo de desligamento
+A.5.12,A.5,Classificação da informação,1,Parcial,Rotular por sensibilidade
+A.5.13,A.5,Rotulagem de informações,1,Não implementado,Decorre da classificação
+A.5.14,A.5,Transferência de informações,1,Parcial,Proteção em trânsito
+A.5.15,A.5,Controle de acesso,1,Parcial,Menor privilégio
+A.5.16,A.5,Gestão de identidades,1,Parcial,Ciclo de vida de identidades
+A.5.17,A.5,Informações de autenticação,1,Parcial,Gestão de credenciais
+A.5.18,A.5,Direitos de acesso,1,Parcial,Provisionamento/revogação
+A.5.19,A.5,Segurança nas relações com fornecedores,1,Parcial,Nuvem e gateway
+A.5.20,A.5,Segurança em acordos com fornecedores,1,Não implementado,Cláusulas contratuais
+A.5.21,A.5,Gestão da segurança na cadeia de suprimentos de TIC,1,Não implementado,Dependência de terceiros
+A.5.22,A.5,Monitoramento e mudança de serviços de fornecedores,1,Não implementado,Acompanhar SLAs
+A.5.23,A.5,Segurança no uso de serviços em nuvem,1,Parcial,Responsabilidade compartilhada
+A.5.24,A.5,Planejamento de gestão de incidentes,1,Não implementado,Base da resposta a incidentes
+A.5.25,A.5,Avaliação e decisão sobre eventos de segurança,1,Não implementado,Triagem de eventos
+A.5.26,A.5,Resposta a incidentes de segurança,1,Não implementado,Contenção e recuperação
+A.5.27,A.5,Aprendizado com incidentes,1,Não implementado,Melhoria contínua
+A.5.28,A.5,Coleta de evidências,1,Não implementado,Suporte a análise forense
+A.5.29,A.5,Segurança durante disrupção,1,Não implementado,Continuidade
+A.5.30,A.5,Prontidão de TIC para continuidade de negócio,1,Não implementado,Recuperação do e-commerce
+A.5.31,A.5,"Requisitos legais, estatutários e contratuais",1,Parcial,LGPD e demais
+A.5.32,A.5,Direitos de propriedade intelectual,1,Implementado,Licenciamento de software
+A.5.33,A.5,Proteção de registros,1,Parcial,Retenção conforme LGPD
+A.5.34,A.5,Privacidade e proteção de PII,1,Parcial,Núcleo da adequação à LGPD
+A.5.35,A.5,Análise crítica independente de segurança,1,Não implementado,Auditoria independente
+A.5.36,A.5,Conformidade com políticas e normas,1,Parcial,Verificação de aderência
+A.5.37,A.5,Procedimentos operacionais documentados,1,Não implementado,Padronização operacional
+A.6.1,A.6,Triagem (background check),1,Não implementado,Verificação de candidatos a área sensível
+A.6.2,A.6,Termos e condições de contratação,1,Parcial,Cláusulas de segurança no contrato
+A.6.3,A.6,"Conscientização, educação e treinamento",1,Não implementado,Programa de awareness
+A.6.4,A.6,Processo disciplinar,1,Não implementado,Consequências por violação
+A.6.5,A.6,Responsabilidades após encerramento do vínculo,1,Parcial,Revogação de acessos
+A.6.6,A.6,Acordos de confidencialidade (NDA),1,Parcial,Proteção de informação sensível
+A.6.7,A.6,Trabalho remoto,1,Parcial,Equipe de TI atua remotamente
+A.6.8,A.6,Reporte de eventos de segurança,1,Implementado,Canal para colaboradores reportarem
+A.7.1,A.7,Perímetros de segurança física,1,Implementado,Sede em São Paulo
+A.7.2,A.7,Entrada física,1,Implementado,Controle de acesso à sede
+A.7.3,A.7,Segurança de escritórios e salas,1,Parcial,Áreas de trabalho
+A.7.4,A.7,Monitoramento de segurança física,1,Parcial,CFTV na sede
+A.7.5,A.7,Proteção contra ameaças físicas e ambientais,1,Parcial,"Incêndio, energia"
+A.7.6,A.7,Trabalho em áreas seguras,0,N/A,Sem área classificada como segura
+A.7.7,A.7,Mesa limpa e tela limpa,1,Não implementado,Boa prática de escritório
+A.7.8,A.7,Localização e proteção de equipamentos,1,Parcial,Estações de trabalho
+A.7.9,A.7,Segurança de ativos fora das instalações,1,Não implementado,Notebooks em trabalho remoto
+A.7.10,A.7,Mídia de armazenamento,1,Não implementado,Controle de mídias removíveis
+A.7.11,A.7,Utilidades de suporte,1,Implementado,Energia/refrigeração (via nuvem)
+A.7.12,A.7,Segurança do cabeamento,0,N/A,Infra majoritariamente em nuvem
+A.7.13,A.7,Manutenção de equipamentos,1,Implementado,Manutenção de estações
+A.7.14,A.7,Descarte ou reutilização segura de equipamentos,1,Não implementado,Sanitização antes de descarte
+A.8.1,A.8,Dispositivos de endpoint,1,Parcial,Estações e notebooks
+A.8.2,A.8,Direitos de acesso privilegiado,1,Parcial,Contas admin
+A.8.3,A.8,Restrição de acesso à informação,1,Parcial,Menor privilégio nos dados
+A.8.4,A.8,Acesso ao código-fonte,1,Parcial,Repositório da aplicação
+A.8.5,A.8,Autenticação segura,1,Não implementado,MFA em contas críticas
+A.8.6,A.8,Gestão de capacidade,1,Parcial,Dimensionamento da nuvem
+A.8.7,A.8,Proteção contra malware,1,Parcial,Antivírus/EDR
+A.8.8,A.8,Gestão de vulnerabilidades técnicas,1,Parcial,Patch e pentest
+A.8.9,A.8,Gestão de configuração,1,Parcial,Hardening de servidores
+A.8.10,A.8,Exclusão de informações,1,Não implementado,Descarte conforme LGPD
+A.8.11,A.8,Mascaramento de dados,1,Não implementado,Proteção de PII em ambientes
+A.8.12,A.8,Prevenção de vazamento de dados (DLP),1,Não implementado,Controle de exfiltração
+A.8.13,A.8,Backup de informações,1,Parcial,Rotina de backup
+A.8.14,A.8,Redundância de recursos de processamento,1,Não implementado,Alta disponibilidade
+A.8.15,A.8,Registro de logs,1,Parcial,Logs de sistema e aplicação
+A.8.16,A.8,Atividades de monitoramento,1,Não implementado,SIEM/monitoramento
+A.8.17,A.8,Sincronização de relógios,1,Implementado,Consistência de logs (NTP)
+A.8.18,A.8,Uso de programas utilitários privilegiados,1,Não implementado,Restrição de ferramentas admin
+A.8.19,A.8,Instalação de software em sistemas operacionais,1,Parcial,Controle de instalação
+A.8.20,A.8,Segurança de redes,1,Parcial,Firewall/segmentação
+A.8.21,A.8,Segurança de serviços de rede,1,Parcial,Serviços expostos
+A.8.22,A.8,Segregação de redes,1,Não implementado,Separar produção e admin
+A.8.23,A.8,Filtragem web,1,Não implementado,Bloqueio de sites maliciosos
+A.8.24,A.8,Uso de criptografia,1,Parcial,TLS e dados em repouso
+A.8.25,A.8,Ciclo de vida de desenvolvimento seguro,1,Não implementado,SDLC da aplicação
+A.8.26,A.8,Requisitos de segurança de aplicações,1,Não implementado,Validação de entrada (anti-SQLi)
+A.8.27,A.8,Arquitetura e engenharia de sistemas seguros,1,Não implementado,Princípios de projeto seguro
+A.8.28,A.8,Codificação segura,1,Não implementado,Boas práticas de código
+A.8.29,A.8,Testes de segurança em desenvolvimento,1,Não implementado,SAST/DAST/pentest
+A.8.30,A.8,Desenvolvimento terceirizado,0,N/A,Desenvolvimento é interno
+A.8.31,A.8,Separação de ambientes (dev/test/prod),1,Parcial,Isolar produção
+A.8.32,A.8,Gestão de mudanças,1,Parcial,Controle de mudanças
+A.8.33,A.8,Informações de teste,1,Não implementado,Dados de teste sem PII real
+A.8.34,A.8,Proteção de sistemas durante testes de auditoria,1,Não implementado,Cuidado em auditorias

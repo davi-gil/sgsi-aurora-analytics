@@ -1,0 +1,11 @@
+ativo_id,nome,tipo,proprietario,classificacao,confidencialidade,integridade,disponibilidade
+AT01,Base de dados de clientes (dados pessoais),Informação,DPO,Restrito,Alta,Alta,Alta
+AT02,Aplicação web de e-commerce,Software,Equipe TI,Confidencial,Alta,Alta,Alta
+AT03,Servidores em nuvem (IaaS),Infraestrutura,Equipe TI,Confidencial,Média,Alta,Alta
+AT04,Código-fonte da aplicação,Software,Equipe TI,Confidencial,Alta,Alta,Média
+AT05,Integração com gateway de pagamento,Serviço,Equipe TI,Restrito,Alta,Alta,Alta
+AT06,Backups,Informação,Equipe TI,Confidencial,Alta,Alta,Alta
+AT07,Contas administrativas / credenciais,Identidade,Equipe TI,Restrito,Alta,Alta,Média
+AT08,Estações de trabalho dos colaboradores,Hardware,Equipe TI,Uso Interno,Média,Média,Média
+AT09,E-mails corporativos,Serviço,Equipe TI,Uso Interno,Média,Média,Média
+AT10,Logs de sistema e aplicação,Informação,Equipe TI,Confidencial,Média,Alta,Média

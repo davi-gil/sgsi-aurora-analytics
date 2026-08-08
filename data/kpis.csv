@@ -1,0 +1,10 @@
+kpi_id,nome,unidade,direcao_meta,meta,frequencia,valor_atual
+K01,Disponibilidade da plataforma,%,maior_igual,99.5,Mensal,99.2
+K02,Tempo medio de correcao de vulns criticas,dias,menor_igual,7,Mensal,12
+K03,Cobertura de MFA em contas privilegiadas,%,maior_igual,100,Mensal,40
+K04,Backups testados (restauracao validada),%,maior_igual,95,Mensal,60
+K05,Incidentes de seguranca registrados,contagem,tendencia_baixa,0,Mensal,5
+K06,MTTR - tempo medio de resposta a incidente,horas,menor_igual,4,Por incidente,9
+K07,Colaboradores treinados no ano,%,maior_igual,90,Trimestral,35
+K08,Cliques em phishing simulado,%,menor_igual,5,Trimestral,18
+K09,Controles do Anexo A implementados,%,maior_igual,85,Trimestral,9
